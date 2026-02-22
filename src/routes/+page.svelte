@@ -23,9 +23,7 @@
     let newKey = $state({
         service: "",
         projectName: "",
-        modelName: "",
         key: "",
-        usageLimit: "",
     });
 
     async function loadKeys() {
@@ -46,12 +44,7 @@
             const res = await fetch("/api/keys", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    ...newKey,
-                    usageLimit: newKey.usageLimit
-                        ? parseFloat(newKey.usageLimit)
-                        : null,
-                }),
+                body: JSON.stringify(newKey),
             });
             if (!res.ok) throw new Error("Failed to add key");
             const addedKey = await res.json();
@@ -60,9 +53,7 @@
             newKey = {
                 service: "",
                 projectName: "",
-                modelName: "",
                 key: "",
-                usageLimit: "",
             };
         } catch (e) {
             error = e instanceof Error ? e.message : "Failed to add key";
@@ -220,20 +211,6 @@
         </div>
         <div>
             <label
-                for="modelName"
-                class="block text-sm font-medium text-gray-300 mb-1"
-                >Model Name (optional)</label
-            >
-            <input
-                type="text"
-                id="modelName"
-                bind:value={newKey.modelName}
-                class="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-obsidian-accent focus:outline-none transition-colors"
-                placeholder="e.g., gpt-4, claude-3"
-            />
-        </div>
-        <div>
-            <label
                 for="key"
                 class="block text-sm font-medium text-gray-300 mb-1"
                 >API Key</label
@@ -245,22 +222,6 @@
                 required
                 class="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-obsidian-accent focus:outline-none transition-colors font-mono"
                 placeholder="sk-..."
-            />
-        </div>
-        <div>
-            <label
-                for="usageLimit"
-                class="block text-sm font-medium text-gray-300 mb-1"
-                >Usage Limit $ (optional)</label
-            >
-            <input
-                type="number"
-                id="usageLimit"
-                bind:value={newKey.usageLimit}
-                step="0.01"
-                min="0"
-                class="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-obsidian-accent focus:outline-none transition-colors"
-                placeholder="e.g., 100.00"
             />
         </div>
         <button
